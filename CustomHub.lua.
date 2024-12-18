@@ -1,1 +1,127 @@
 
+local player = game.Players.LocalPlayer
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = player:WaitForChild("PlayerGui")
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0.3, 0, 0.6, 0)
+MainFrame.Position = UDim2.new(0.35, 0, 0.2, 0)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainFrame.Parent = ScreenGui
+
+local Title = Instance.new("TextLabel")
+Title.Text = "Custom Hub"
+Title.Size = UDim2.new(1, 0, 0.1, 0)
+Title.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.Font = Enum.Font.SourceSansBold
+Title.TextScaled = true
+Title.Parent = MainFrame
+
+local TabFrame = Instance.new("Frame")
+TabFrame.Size = UDim2.new(0.2, 0, 0.9, 0)
+TabFrame.Position = UDim2.new(0, 0, 0.1, 0)
+TabFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+TabFrame.Parent = MainFrame
+
+local ContentFrame = Instance.new("Frame")
+ContentFrame.Size = UDim2.new(0.8, 0, 0.9, 0)
+ContentFrame.Position = UDim2.new(0.2, 0, 0.1, 0)
+ContentFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+ContentFrame.Parent = MainFrame
+
+
+local function ClearContent()
+    for _, child in pairs(ContentFrame:GetChildren()) do
+        if not child:IsA("UIListLayout") then
+            child:Destroy()
+        end
+    end
+end
+
+
+local function CreateTab(name, callback)
+    local TabButton = Instance.new("TextButton")
+    TabButton.Size = UDim2.new(1, 0, 0.1, 0)
+    TabButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+    TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TabButton.Text = name
+    TabButton.Parent = TabFrame
+
+    TabButton.MouseButton1Click:Connect(function()
+        ClearContent()
+        callback()
+    end)
+end
+
+
+local function AutoRollTab()
+    local AutoRollToggle = Instance.new("TextButton")
+    AutoRollToggle.Text = "Auto Roll: OFF"
+    AutoRollToggle.Size = UDim2.new(0.8, 0, 0.1, 0)
+    AutoRollToggle.Position = UDim2.new(0.1, 0, 0.1, 0)
+    AutoRollToggle.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+    AutoRollToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    AutoRollToggle.Parent = ContentFrame
+
+    local enabled = false
+    AutoRollToggle.MouseButton1Click:Connect(function()
+        enabled = not enabled
+        AutoRollToggle.Text = enabled and "Auto Roll: ON" or "Auto Roll: OFF"
+        print("Auto Roll is now", enabled and "ON" or "OFF")
+    end)
+end
+
+local function AutoMerchantsTab()
+    local AutoBuyToggle = Instance.new("TextButton")
+    AutoBuyToggle.Text = "Auto Buy Potions: OFF"
+    AutoBuyToggle.Size = UDim2.new(0.8, 0, 0.1, 0)
+    AutoBuyToggle.Position = UDim2.new(0.1, 0, 0.1, 0)
+    AutoBuyToggle.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
+    AutoBuyToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    AutoBuyToggle.Parent = ContentFrame
+
+    local enabled = false
+    AutoBuyToggle.MouseButton1Click:Connect(function()
+        enabled = not enabled
+        AutoBuyToggle.Text = enabled and "Auto Buy Potions: ON" or "Auto Buy Potions: OFF"
+        print("Auto Buy Potions is now", enabled and "ON" or "OFF")
+    end)
+
+    
+    local InputLabel = Instance.new("TextLabel")
+    InputLabel.Text = "Minimum to Keep:"
+    InputLabel.Size = UDim2.new(0.8, 0, 0.1, 0)
+    InputLabel.Position = UDim2.new(0.1, 0, 0.25, 0)
+    InputLabel.BackgroundTransparency = 1
+    InputLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    InputLabel.Parent = ContentFrame
+
+    local InputBox = Instance.new("TextBox")
+    InputBox.Size = UDim2.new(0.8, 0, 0.1, 0)
+    InputBox.Position = UDim2.new(0.1, 0, 0.35, 0)
+    InputBox.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+    InputBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    InputBox.Text = "5"
+    InputBox.Parent = ContentFrame
+
+    InputBox.FocusLost:Connect(function()
+        print("Minimum to keep set to:", tonumber(InputBox.Text) or "Invalid input")
+    end)
+end
+
+
+CreateTab("Auto Roll", AutoRollTab)
+CreateTab("Auto Merchants", AutoMerchantsTab)
+CreateTab("Auto Fruits", function()
+    print("Auto Fruits Content Loaded")
+    local Label = Instance.new("TextLabel")
+    Label.Text = "Feature Under Development"
+    Label.Size = UDim2.new(1, 0, 0.2, 0)
+    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Label.BackgroundTransparency = 1
+    Label.Parent = ContentFrame
+end)
+
+
+AutoRollTab()
